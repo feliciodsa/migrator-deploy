@@ -19,9 +19,9 @@ services:
         echo FUNCTIONS_SYNC_OK &&
         sleep 300
     volumes:
-      - /etc/easypanel/projects/sac-digital-piloto/supabase/code/supabase/code/volumes/functions:/target
+      - ${FUNCTIONS_HOST_PATH}:/target
 
 networks:
   supabase_net:
     external: true
-    name: sac-digital-piloto_supabase_default
+    name: ${SUPABASE_NETWORK}
