@@ -1,6 +1,6 @@
 services:
   migrator:
-    image: ghcr.io/feliciodsa/sac-digital-migrator:latest
+    image: ${MIGRATOR_IMAGE}
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
     networks:
@@ -12,9 +12,10 @@ services:
     command:
       - >
         rm -rf /tmp/repo &&
-        git clone --depth 1 https://github.com/feliciodsa/sac-digital-supabase-deploy.git /tmp/repo &&
-        for f in criar-solicitacao-publica criar-usuario enviar-confirmacao enviar-lembretes redefinir-senha; do
-          rm -rf /target/$$f && cp -r /tmp/repo/supabase/code/volumes/functions/$$f /target/$$f;
+        git clone --depth 1 ${FUNCTIONS_REPO} /tmp/repo &&
+        for d in /tmp/repo/supabase/code/volumes/functions/*/; do
+          name=$$(basename "$$d");
+          rm -rf "/target/$$name" && cp -r "$$d" "/target/$$name";
         done &&
         echo FUNCTIONS_SYNC_OK &&
         sleep 300
