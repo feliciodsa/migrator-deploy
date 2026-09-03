@@ -8,14 +8,16 @@ services:
 
   functions-sync:
     image: alpine/git:latest
-    command: >
-      sh -c "rm -rf /tmp/repo &&
-      git clone --depth 1 https://github.com/feliciodsa/sac-digital-supabase-deploy.git /tmp/repo &&
-      for f in criar-solicitacao-publica criar-usuario enviar-confirmacao enviar-lembretes redefinir-senha; do
-        rm -rf /target/$$f && cp -r /tmp/repo/supabase/code/volumes/functions/$$f /target/$$f;
-      done &&
-      echo FUNCTIONS_SYNC_OK &&
-      sleep 300"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >
+        rm -rf /tmp/repo &&
+        git clone --depth 1 https://github.com/feliciodsa/sac-digital-supabase-deploy.git /tmp/repo &&
+        for f in criar-solicitacao-publica criar-usuario enviar-confirmacao enviar-lembretes redefinir-senha; do
+          rm -rf /target/$$f && cp -r /tmp/repo/supabase/code/volumes/functions/$$f /target/$$f;
+        done &&
+        echo FUNCTIONS_SYNC_OK &&
+        sleep 300
     volumes:
       - /etc/easypanel/projects/sac-digital-piloto/supabase/code/supabase/code/volumes/functions:/target
 
